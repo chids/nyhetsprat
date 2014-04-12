@@ -67,7 +67,7 @@ public class SpokenResource {
         welcome.setMethod("GET");
         welcome.setAction(UriBuilder.fromResource(RegisterResource.class).build().toString());
         welcome.setTimeout(3);
-        welcome.append(swedish("Hej, och välkommen till SpokenNews"));
+        welcome.append(swedish("Hej, och välkommen till Spoken News"));
         welcome.append(swedish("Tryck en siffra för att registrera dig eller dröj kvar"));
         return welcome;
     }
