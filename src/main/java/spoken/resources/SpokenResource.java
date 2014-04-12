@@ -1,13 +1,11 @@
 package spoken.resources;
 
-import static com.google.common.base.Strings.nullToEmpty;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
 import java.net.URI;
 import java.util.Collection;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -50,11 +48,10 @@ public class SpokenResource {
     }
 
     @GET
-    public Response answer(@QueryParam("From") final String from,
-                           @QueryParam("more") @DefaultValue("") final String continuation) throws Exception {
+    public Response answer(@QueryParam("From") final String from) throws Exception {
         final TwiMLResponse twiml = new TwiMLResponse();
         LOG.info("Incoming call from " + from);
-        twiml.append(greet(from, nullToEmpty(continuation).trim().isEmpty()));
+        twiml.append(greet(from));
         for(final Source source : this.sources) {
             source.say(twiml, from, this.history);
         }
@@ -78,16 +75,13 @@ public class SpokenResource {
         return more;
     }
 
-    private Verb greet(final String number, final boolean first) throws TwilioRestException {
+    private Verb greet(final String number) throws TwilioRestException {
         if(this.accounts.isRegistred(number).isPresent()) {
             return swedish("Välkommen tillbaka till nyhetsprat...");
         }
         this.accounts.register(number, "-");
         this.accounts.sendWelcomeSms(number);
-        if(first) {
-            return swedish("Hej och välkommen till nyhetsprat...");
-        }
-        return swedish(" ");
+        return swedish("Hej och välkommen till nyhetsprat...");
     }
 
     public static Say swedish(final String message) {
