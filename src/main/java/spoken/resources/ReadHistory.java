@@ -31,4 +31,10 @@ public class ReadHistory {
             return nonTx.redis().smembers("recent-" + number);
         }
     }
+
+    public void clearRecentURls(final String number) {
+        try(NonTx nonTx = this.redis.nonTx()) {
+            nonTx.redis().del("recent-" + number);
+        }
+    }
 }

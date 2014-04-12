@@ -45,6 +45,7 @@ public class CallbackResource {
         final Optional<String> user = this.accounts.isRegistred(from);
         if(user.isPresent()) {
             final Collection<String> recentUrls = this.history.recentUrls(from);
+            this.history.clearRecentURls(from);
             if(isTwitterHandle(user.get())) {
                 for(final List<String> segments : Lists.partition(new ArrayList<>(recentUrls), 2)) {
                     this.twitter.updateStatus(user.get().concat(" ").concat(Joiner.on(' ').join(segments)));
