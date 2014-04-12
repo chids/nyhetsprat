@@ -22,9 +22,6 @@ import javax.ws.rs.core.UriBuilder;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import spoken.JedisUtil;
-import spoken.JedisUtil.NonTx;
-
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 
@@ -32,12 +29,12 @@ import com.twilio.sdk.TwilioRestException;
 @Produces(TEXT_HTML)
 public class RegisterResource {
 
-    private final JedisUtil redis;
     private final TwilioRestClient sms;
+    private final AccountDatabase accounts;
 
-    public RegisterResource(final JedisUtil redis) {
+    public RegisterResource(final AccountDatabase accounts) {
+        this.accounts = accounts;
         this.sms = new TwilioRestClient(getenv("TWILIO_SID"), getenv("TWILIO_TOKEN"));
-        this.redis = redis;
     }
 
     @GET
@@ -61,11 +58,9 @@ public class RegisterResource {
         checkArgument(form.containsKey("Body"), "No content");
         checkNotNull(emptyToNull(form.getFirst("From")), "Empty number");
         checkNotNull(emptyToNull(form.getFirst("Body")), "Empty content");
-        try(NonTx nonTx = this.redis.nonTx()) {
-            nonTx.redis().set(
-                    "notify:".concat(form.getFirst("From")),
-                    form.getFirst("Body"));
-        }
+        final String number = form.getFirst("From");
+        final String address = form.getFirst("Body");
+        this.accounts.register(number, address);
         return Response.ok().build();
     }
 }

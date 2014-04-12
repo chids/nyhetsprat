@@ -29,17 +29,29 @@ import com.twilio.sdk.verbs.TwiMLResponse;
 public class SpokenResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpokenResource.class);
-    private Collection<Source> sources = ImmutableList.of(
+    private final Collection<Source> sources = ImmutableList.of(
             new Source("Svenska Dagbladet", "http://www.svd.se/?service=rss"),
             new Source("Dagens Nyheter", "http://www.dn.se/nyheter/m/rss/"),
             new Source("Expressen", "http://www.expressen.se/Pages/OutboundFeedsPage.aspx?id=3642159&viewstyle=rss")
             );
+    private final AccountDatabase accounts;
+
+    public SpokenResource(final AccountDatabase accounts) {
+        this.accounts = accounts;
+    }
 
     @GET
     public Response answer(@QueryParam("From") final Optional<String> from) throws TwiMLException {
         final TwiMLResponse twiml = new TwiMLResponse();
         LOG.info("Incoming call from " + from.or("unknown"));
-        twiml.append(new Say("LOL"));
+        if(this.accounts.isRegistred(from).isPresent()) {
+            final Say returning = new Say("Välkommen tillbaka");
+            returning.setLanguage("sv-SE");
+            twiml.append(returning);
+        }
+        else {
+            twiml.append(new Say("LOL, new user"));
+        }
         for(final Source source : this.sources) {
             source.say(twiml);
         }
