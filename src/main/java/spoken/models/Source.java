@@ -48,6 +48,7 @@ public class Source implements Runnable {
             final Article article = it.next();
             if(!article.isUnread(history, number)) {
                 article.say(twiml, this.name);
+                break;
             }
         }
     }
