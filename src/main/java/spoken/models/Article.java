@@ -15,12 +15,16 @@ public class Article {
     private final String uri;
 
     public Article(final SyndEntry entry) {
-        this.title = clean(entry.getTitle());
+        this.title = convertQuotes(clean(entry.getTitle()));
         this.uri = clean(entry.getUri());
     }
 
     private static String clean(final String something) {
         return removeHtml(checkNotNull(Strings.emptyToNull(something)));
+    }
+
+    public static String convertQuotes(final String something) {
+        return something.replaceFirst("\"", "Citat: \"");
     }
 
     private static String removeHtml(final String something) {
