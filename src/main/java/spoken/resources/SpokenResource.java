@@ -70,7 +70,7 @@ public class SpokenResource {
         more.setMethod("GET");
         more.setAction(apa.toString());
         more.setNumDigits(1);
-        more.setTimeout(2);
+        more.setTimeout(5);
         more.append(swedish("Tryck valfritt nummer för att höra fler nyheter"));
         return more;
     }
