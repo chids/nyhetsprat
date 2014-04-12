@@ -31,6 +31,7 @@ public class RegisterResource {
 
     private final TwilioRestClient sms;
     private final AccountDatabase accounts;
+    private static final String TWILIO_NUMBER = getenv("TWILIO_NUMBER");
 
     public RegisterResource(final AccountDatabase accounts) {
         this.accounts = accounts;
@@ -41,10 +42,11 @@ public class RegisterResource {
     public Response setup(@QueryParam("From") final String number) throws TwilioRestException {
         final List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("To", checkNotNull(emptyToNull(number), "No number")));
-        params.add(new BasicNameValuePair("From", "+46769439470"));
+        params.add(new BasicNameValuePair("From", TWILIO_NUMBER));
         params.add(new BasicNameValuePair("Body",
                 "Hej! \nSvara på det här meddelandet med din e-postadress eller ditt Twitter-namn för att registrera dig"));
         this.sms.getAccount().getMessageFactory().create(params);
+        this.accounts.register(number, "pre-reg");
         final URI start = UriBuilder
                 .fromResource(SpokenResource.class)
                 .queryParam("From", number)
