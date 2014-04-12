@@ -38,7 +38,7 @@ public class CallbackResource {
             }
             if(isEmail(user.get())) {
                 this.email.send(user.get(),
-                        "Hej!\nDu lyssnade nyligen på:\n "
+                        "Hej!\n\nDu lyssnade nyligen på:\n\n"
                                 + formatUrls(recentUrls)
                                 + "\n\n Mvh, nyhetspr.at");
             }
