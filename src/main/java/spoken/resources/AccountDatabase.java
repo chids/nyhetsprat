@@ -7,8 +7,6 @@ import static java.lang.System.getenv;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.UriBuilder;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -57,10 +55,6 @@ public class AccountDatabase {
                         "Svara på det här meddelandet med din e-postadress eller ditt Twitter-namn om du vill att vi " +
                         "skickar dig länkarna till de artiklar du lyssnat på"));
         this.twilio.getAccount().getMessageFactory().create(params);
-        UriBuilder
-                .fromResource(SpokenResource.class)
-                .queryParam("From", number)
-                .build();
 
     }
 }
