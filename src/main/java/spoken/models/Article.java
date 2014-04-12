@@ -1,6 +1,7 @@
 package spoken.models;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import spoken.resources.ReadHistory;
 
 import com.google.common.base.Strings;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -32,5 +33,9 @@ public class Article {
         final Say say = new Say(source + ": " + this.title);
         say.setLanguage("sv-SE");
         twiml.append(say);
+    }
+
+    public boolean isUnread(final ReadHistory history, final String number) {
+        return history.isUnread(number, this.uri);
     }
 }

@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import spoken.resources.ReadHistory;
+
 import com.google.common.collect.Lists;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -40,12 +42,13 @@ public class Source implements Runnable {
         executor.scheduleAtFixedRate(this, 0, 5, TimeUnit.MINUTES);
     }
 
-    public void say(final TwiMLResponse twiml, final String number) throws TwiMLException {
+    public void say(final TwiMLResponse twiml, final String number, final ReadHistory history) throws TwiMLException {
         final Iterator<Article> it = this.articles.iterator();
         while(it.hasNext()) {
             final Article article = it.next();
-
-            article.say(twiml, this.name);
+            if(!article.isUnread(history, number)) {
+                article.say(twiml, this.name);
+            }
         }
     }
 
@@ -68,6 +71,5 @@ public class Source implements Runnable {
         catch(IllegalArgumentException | IOException | FeedException | FetcherException e) {
             LOG.error("Unknown exception", e);
         }
-
     }
 }

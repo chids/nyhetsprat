@@ -38,9 +38,11 @@ public class SpokenResource {
             new Source("Expressen", "http://www.expressen.se/Pages/OutboundFeedsPage.aspx?id=3642159&viewstyle=rss")
             );
     private final AccountDatabase accounts;
+    private final ReadHistory history;
 
-    public SpokenResource(final AccountDatabase accounts) {
+    public SpokenResource(final AccountDatabase accounts, final ReadHistory history) {
         this.accounts = accounts;
+        this.history = history;
     }
 
     @GET
@@ -49,7 +51,7 @@ public class SpokenResource {
         LOG.info("Incoming call from " + from.or("unknown"));
         twiml.append(greet(from));
         for(final Source source : this.sources) {
-            source.say(twiml, from.or("unknown"));
+            source.say(twiml, from.or("unknown"), this.history);
         }
         twiml.append(new Say("kay thanks bye"));
         twiml.append(new Hangup());

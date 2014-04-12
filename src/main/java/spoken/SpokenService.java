@@ -12,6 +12,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 import spoken.resources.AccountDatabase;
+import spoken.resources.ReadHistory;
 import spoken.resources.RegisterResource;
 import spoken.resources.SpokenResource;
 
@@ -23,7 +24,8 @@ public class SpokenService extends Application<Configuration> {
     @Override
     public void run(final Configuration config, final Environment env) throws Exception {
         final AccountDatabase accounts = new AccountDatabase(redis(env));
-        env.jersey().register(new SpokenResource(accounts));
+        final ReadHistory history = new ReadHistory(redis(env));
+        env.jersey().register(new SpokenResource(accounts, history));
         env.jersey().register(new RegisterResource(accounts));
     }
 
