@@ -23,8 +23,9 @@ public class SpokenService extends Application<Configuration> {
 
     @Override
     public void run(final Configuration config, final Environment env) throws Exception {
-        final AccountDatabase accounts = new AccountDatabase(redis(env));
-        final ReadHistory history = new ReadHistory(redis(env));
+        final JedisUtil redis = redis(env);
+        final AccountDatabase accounts = new AccountDatabase(redis);
+        final ReadHistory history = new ReadHistory(redis);
         env.jersey().register(new SpokenResource(accounts, history));
         env.jersey().register(new RegisterResource(accounts));
     }
