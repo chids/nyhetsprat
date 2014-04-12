@@ -9,9 +9,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class SpokenResource {
     }
 
     @GET
-    public Response answer(@QueryParam("From") final String from, @Context final UriInfo uri) throws Exception {
+    public Response answer(@QueryParam("From") final String from) throws Exception {
         final TwiMLResponse twiml = new TwiMLResponse();
         LOG.info("Incoming call from " + from);
         twiml.append(greet(from));
@@ -56,7 +55,7 @@ public class SpokenResource {
         }
         final Gather more = new Gather();
         more.setMethod("GET");
-        more.setAction(uri.getRequestUri().toString());
+        more.setAction(UriBuilder.fromResource(SpokenResource.class).queryParam("From", from).build().toString());
         more.setNumDigits(1);
         more.setTimeout(2);
         more.append(swedish("Tryck valfritt nummer för att höra fler nyheter"));
