@@ -9,7 +9,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import spoken.models.Source;
 
 import com.google.common.collect.ImmutableList;
 import com.twilio.sdk.TwilioRestException;
+import com.twilio.sdk.verbs.Gather;
 import com.twilio.sdk.verbs.Hangup;
 import com.twilio.sdk.verbs.Say;
 import com.twilio.sdk.verbs.TwiMLResponse;
@@ -44,13 +47,20 @@ public class SpokenResource {
     }
 
     @GET
-    public Response answer(@QueryParam("From") final String from) throws Exception {
+    public Response answer(@QueryParam("From") final String from, @Context final UriInfo uri) throws Exception {
         final TwiMLResponse twiml = new TwiMLResponse();
         LOG.info("Incoming call from " + from);
         twiml.append(greet(from));
         for(final Source source : this.sources) {
             source.say(twiml, from, this.history);
         }
+        final Gather more = new Gather();
+        more.setMethod("GET");
+        more.setAction(uri.getRequestUri().toString());
+        more.setNumDigits(1);
+        more.setTimeout(2);
+        more.append(swedish("Tryck valfritt nummer för att höra fler nyheter"));
+        twiml.append(more);
         twiml.append(new Say("kay thanks bye"));
         twiml.append(new Hangup());
         return Response.ok(twiml.toXML()).build();
