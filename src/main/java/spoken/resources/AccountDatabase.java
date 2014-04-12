@@ -53,7 +53,7 @@ public class AccountDatabase {
         params.add(new BasicNameValuePair("To", checkNotNull(emptyToNull(number), "No number")));
         params.add(new BasicNameValuePair("From", TWILIO_NUMBER));
         params.add(new BasicNameValuePair("Body",
-                "Hej och välkommen till Pratade Nyheter! \n" +
+                "Hej och välkommen till @nyhetsprat! \n" +
                         "Svara på det här meddelandet med din e-postadress eller ditt Twitter-namn om du vill att vi " +
                         "skickar dig länkarna till de artiklar du lyssnat på"));
         this.twilio.getAccount().getMessageFactory().create(params);
