@@ -46,6 +46,11 @@
             <version>2.4.2</version>
         </dependency>
         <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.sendgrid</groupId>
             <artifactId>sendgrid-java</artifactId>
             <version>${sendgrid.version}</version>

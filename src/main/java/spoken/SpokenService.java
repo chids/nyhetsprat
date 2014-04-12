@@ -17,6 +17,9 @@ import spoken.resources.EmailSender;
 import spoken.resources.ReadHistory;
 import spoken.resources.RegisterResource;
 import spoken.resources.SpokenResource;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 import com.twilio.sdk.TwilioRestClient;
 
@@ -34,7 +37,7 @@ public class SpokenService extends Application<Configuration> {
         final ReadHistory history = new ReadHistory(redis);
         env.jersey().register(new SpokenResource(accounts, history));
         env.jersey().register(new RegisterResource(accounts));
-        env.jersey().register(new CallbackResource(accounts, history, email));
+        env.jersey().register(new CallbackResource(accounts, history, email, twitter()));
     }
 
     private static JedisUtil redis(final Environment env) {
@@ -47,6 +50,17 @@ public class SpokenService extends Application<Configuration> {
         final JedisUtil redis = new JedisUtil(pool);
         env.lifecycle().manage(redis);
         return redis;
+    }
+
+    private static Twitter twitter() {
+        final ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey(getenv("TWITTER_KEY"))
+                .setOAuthConsumerSecret(getenv("TWITTER_SECRET"))
+                .setOAuthAccessToken(getenv("TWITTER_ACCESS_TOKEN"))
+                .setOAuthAccessTokenSecret(getenv("TWITTER_ACCESS_SECRET"));
+        final TwitterFactory tf = new TwitterFactory(cb.build());
+        return tf.getInstance();
     }
 
     public static void main(final String[] args) throws Exception {

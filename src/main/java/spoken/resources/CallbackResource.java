@@ -11,6 +11,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 
 @Produces(APPLICATION_XML)
@@ -21,20 +25,25 @@ public class CallbackResource {
     private final AccountDatabase accounts;
     private final ReadHistory history;
     private final EmailSender email;
+    private final Twitter twitter;
 
-    public CallbackResource(final AccountDatabase accounts, final ReadHistory history, final EmailSender email) {
+    public CallbackResource(final AccountDatabase accounts,
+                            final ReadHistory history,
+                            final EmailSender email,
+                            final Twitter twitter) {
         this.accounts = accounts;
         this.history = history;
         this.email = email;
+        this.twitter = twitter;
     }
 
     @GET
-    public Response callback(@QueryParam("From") final String from) {
+    public Response callback(@QueryParam("From") final String from) throws TwitterException {
         final Optional<String> user = this.accounts.isRegistred(from);
         if(user.isPresent()) {
             final Collection<String> recentUrls = this.history.recentUrls(from);
             if(isTwitterHandle(user.get())) {
-                // yolo
+                this.twitter.updateStatus(user.get().concat(" ").concat(Joiner.on(' ').join(recentUrls)));
             }
             if(isEmail(user.get())) {
                 this.email.send(user.get(),
@@ -60,7 +69,7 @@ public class CallbackResource {
     }
 
     private static boolean isEmail(final String something) {
-        return !something.startsWith("@") && something.contains("@");
+        return !isTwitterHandle(something) && something.contains("@");
     }
 
 }
