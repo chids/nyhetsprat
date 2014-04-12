@@ -46,7 +46,7 @@ public class Source implements Runnable {
         final Iterator<Article> it = this.articles.iterator();
         while(it.hasNext()) {
             final Article article = it.next();
-            if(!article.isUnread(history, number)) {
+            if(article.isUnread(history, number)) {
                 article.say(twiml, this.name);
                 break;
             }
