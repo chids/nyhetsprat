@@ -37,7 +37,10 @@ public class CallbackResource {
                 // yolo
             }
             if(isEmail(user.get())) {
-                this.email.send(user.get(), "Du läste nyligen: " + formatUrls(recentUrls));
+                this.email.send(user.get(),
+                        "Hej!\nDu lyssnade nyligen på:\n "
+                                + formatUrls(recentUrls)
+                                + "\n\n Mvh, nyhetspr.at");
             }
         }
         return Response.ok().build();

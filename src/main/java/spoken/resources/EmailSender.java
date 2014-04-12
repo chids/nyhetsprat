@@ -16,7 +16,7 @@ public class EmailSender {
         final SendGrid sendGrid = new SendGrid(this.user, this.passwd);
         sendGrid.addTo(to);
         sendGrid.setText(body);
-        sendGrid.setFrom("nanana@watman.com");
+        sendGrid.setFrom("dont-reply@nyhetspr.at");
         sendGrid.setSubject("Dina upplästa nyheter");
         sendGrid.send();
     }
