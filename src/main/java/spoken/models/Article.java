@@ -36,6 +36,10 @@ public class Article {
     }
 
     public boolean isUnread(final ReadHistory history, final String number) {
-        return history.isUnread(number, this.uri);
+        return history.isUnread(this.uri, number);
+    }
+
+    public void markAsRead(final ReadHistory history, final String number) {
+        history.markAsRead(this.uri, number);
     }
 }

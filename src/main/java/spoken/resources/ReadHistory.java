@@ -11,11 +11,15 @@ public class ReadHistory {
         this.redis = redis;
     }
 
-    public boolean isUnread(final String number, final String uri) {
+    public boolean isUnread(final String uri, final String number) {
         try(NonTx nonTx = this.redis.nonTx()) {
             return !nonTx.redis().sismember(number, uri);
         }
     }
 
-    public void markAsRead(final String number, final String uri) {}
+    public void markAsRead(final String uri, final String number) {
+        try(NonTx nonTx = this.redis.nonTx()) {
+            nonTx.redis().sadd(number, uri);
+        }
+    }
 }
