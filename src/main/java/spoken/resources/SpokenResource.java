@@ -56,12 +56,12 @@ public class SpokenResource {
     }
 
     private Verb greet(final String number) throws TwilioRestException {
-        if(!this.accounts.isRegistred(number).isPresent()) {
-            this.accounts.register(number, "-");
-            this.accounts.sendWelcomeSms(number);
-
+        if(this.accounts.isRegistred(number).isPresent()) {
+            return swedish("Välkommen tillbaka, dagens nyheter är...");
         }
-        return swedish("Välkommen tillbaka");
+        this.accounts.register(number, "-");
+        this.accounts.sendWelcomeSms(number);
+        return swedish("Hej och välkommen! Här följer dagens nyheter");
     }
 
     public static Say swedish(final String message) {
