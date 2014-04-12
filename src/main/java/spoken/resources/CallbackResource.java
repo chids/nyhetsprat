@@ -20,10 +20,12 @@ public class CallbackResource {
 
     private final AccountDatabase accounts;
     private final ReadHistory history;
+    private final EmailSender email;
 
-    public CallbackResource(final AccountDatabase accounts, final ReadHistory history) {
+    public CallbackResource(final AccountDatabase accounts, final ReadHistory history, final EmailSender email) {
         this.accounts = accounts;
         this.history = history;
+        this.email = email;
     }
 
     @GET
@@ -35,10 +37,19 @@ public class CallbackResource {
                 // yolo
             }
             if(isEmail(user.get())) {
-                // #winning
+                this.email.send(user.get(), "Du läste nyligen: " + formatUrls(recentUrls));
             }
         }
         return Response.ok().build();
+    }
+
+    private static String formatUrls(final Collection<String> urls) {
+        final StringBuilder sb = new StringBuilder();
+        for(final String url : urls) {
+            sb.append(url);
+            sb.append("\n");
+        }
+        return sb.toString().trim();
     }
 
     private static boolean isTwitterHandle(final String something) {

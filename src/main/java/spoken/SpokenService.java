@@ -12,6 +12,8 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 import spoken.resources.AccountDatabase;
+import spoken.resources.CallbackResource;
+import spoken.resources.EmailSender;
 import spoken.resources.ReadHistory;
 import spoken.resources.RegisterResource;
 import spoken.resources.SpokenResource;
@@ -27,10 +29,12 @@ public class SpokenService extends Application<Configuration> {
     public void run(final Configuration config, final Environment env) throws Exception {
         final TwilioRestClient twilio = new TwilioRestClient(getenv("TWILIO_SID"), getenv("TWILIO_TOKEN"));
         final JedisUtil redis = redis(env);
+        final EmailSender email = new EmailSender(getenv("SENDGRID_USERNAME"), getenv("SENDGRID_PASSWORD"));
         final AccountDatabase accounts = new AccountDatabase(redis, twilio);
         final ReadHistory history = new ReadHistory(redis);
         env.jersey().register(new SpokenResource(accounts, history));
         env.jersey().register(new RegisterResource(accounts));
+        env.jersey().register(new CallbackResource(accounts, history, email));
     }
 
     private static JedisUtil redis(final Environment env) {
