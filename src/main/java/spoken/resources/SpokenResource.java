@@ -58,16 +58,15 @@ public class SpokenResource {
         for(final Source source : this.sources) {
             source.say(twiml, from, this.history);
         }
-        twiml.append(hearMore(from));
+        twiml.append(hearMore());
         twiml.append(new Say("kay thanks bye"));
         twiml.append(new Hangup());
         return Response.ok(twiml.toXML()).build();
     }
 
-    private static Gather hearMore(final String from) throws TwiMLException {
+    private static Gather hearMore() throws TwiMLException {
         final URI apa = UriBuilder
                 .fromResource(SpokenResource.class)
-                .queryParam("From", from)
                 .queryParam("more", "yes")
                 .build();
         final Gather more = new Gather();
