@@ -26,9 +26,11 @@ import com.twilio.sdk.verbs.TwiMLResponse;
 public class Source implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Source.class);
+    private final FeedFetcherCache feedInfoCache = HashMapFeedInfoCache.getInstance();
+    private final FeedFetcher fetcher = new HttpURLFeedFetcher(this.feedInfoCache);
+    private final List<Article> articles;
     private final URI uri;
     private final String name;
-    private final List<Article> articles;
 
     public Source(final String name, final String uri) {
         this.name = name;
@@ -51,9 +53,7 @@ public class Source implements Runnable {
     @SuppressWarnings("unchecked")
     public void run() {
         try {
-            final FeedFetcherCache feedInfoCache = HashMapFeedInfoCache.getInstance();
-            final FeedFetcher fetcher = new HttpURLFeedFetcher(feedInfoCache);
-            final SyndFeed feed = fetcher.retrieveFeed(this.uri.toURL());
+            final SyndFeed feed = this.fetcher.retrieveFeed(this.uri.toURL());
             final List<SyndEntry> entries = feed.getEntries();
             if(entries.size() > 0) {
                 this.articles.clear();
