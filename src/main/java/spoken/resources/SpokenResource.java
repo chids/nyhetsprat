@@ -53,11 +53,10 @@ public class SpokenResource {
             twiml.append(new Say("LOL, new user"));
         }
         for(final Source source : this.sources) {
-            source.say(twiml);
+            source.say(twiml, from.or("unknown"));
         }
         twiml.append(new Say("kay thanks bye"));
         twiml.append(new Hangup());
         return Response.ok(twiml.toXML()).build();
     }
-
 }

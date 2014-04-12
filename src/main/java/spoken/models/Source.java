@@ -2,6 +2,7 @@ package spoken.models;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,7 +20,6 @@ import com.sun.syndication.fetcher.impl.FeedFetcherCache;
 import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
 import com.sun.syndication.fetcher.impl.HttpURLFeedFetcher;
 import com.sun.syndication.io.FeedException;
-import com.twilio.sdk.verbs.Say;
 import com.twilio.sdk.verbs.TwiMLException;
 import com.twilio.sdk.verbs.TwiMLResponse;
 
@@ -28,7 +28,7 @@ public class Source implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(Source.class);
     private final URI uri;
     private final String name;
-    private final List<String> articles;
+    private final List<Article> articles;
 
     public Source(final String name, final String uri) {
         this.name = name;
@@ -38,23 +38,12 @@ public class Source implements Runnable {
         executor.scheduleAtFixedRate(this, 0, 5, TimeUnit.MINUTES);
     }
 
-    private static String removeHtml(final String something) {
-        return something.replaceAll("\\<[^>]*>", "");
-    }
+    public void say(final TwiMLResponse twiml, final String number) throws TwiMLException {
+        final Iterator<Article> it = this.articles.iterator();
+        while(it.hasNext()) {
+            final Article article = it.next();
 
-    public void say(final TwiMLResponse twiml) throws TwiMLException {
-        say(twiml, 0);
-    }
-
-    public void say(final TwiMLResponse twiml, final int rank) throws TwiMLException {
-        System.err.println("rank: " + rank + " size: " + this.articles.size());
-        if(this.articles.size() > rank) {
-            final Say say = new Say(this.name + ": " + this.articles.get(rank));
-            say.setLanguage("sv-SE");
-            twiml.append(say);
-        }
-        else {
-            LOG.info("Message rank is out of range [source={}]", this.name);
+            article.say(twiml, this.name);
         }
     }
 
@@ -69,7 +58,10 @@ public class Source implements Runnable {
             if(entries.size() > 0) {
                 this.articles.clear();
                 for(final SyndEntry entry : entries) {
-                    this.articles.add(removeHtml(entry.getTitle()));
+                    try {
+                        this.articles.add(new Article(entry));
+                    }
+                    catch(final NullPointerException npe) {}
                 }
             }
         }
@@ -78,5 +70,4 @@ public class Source implements Runnable {
         }
 
     }
-
 }
