@@ -2,7 +2,9 @@ package spoken.resources;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,6 +18,7 @@ import twitter4j.TwitterException;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 
 @Produces(APPLICATION_XML)
 @Consumes(APPLICATION_XML)
@@ -43,25 +46,18 @@ public class CallbackResource {
         if(user.isPresent()) {
             final Collection<String> recentUrls = this.history.recentUrls(from);
             if(isTwitterHandle(user.get())) {
-                this.twitter.updateStatus(user.get().concat(" ").concat(Joiner.on(' ').join(recentUrls)));
+                for(final List<String> segments : Lists.partition(new ArrayList<>(recentUrls), 2)) {
+                    this.twitter.updateStatus(user.get().concat(" ").concat(Joiner.on(' ').join(segments)));
+                }
             }
             if(isEmail(user.get())) {
                 this.email.send(user.get(),
                         "Hej!\n\nDu lyssnade nyligen på:\n\n"
-                                + formatUrls(recentUrls)
+                                + Joiner.on('\n').join(recentUrls)
                                 + "\n\n Mvh, nyhetspr.at");
             }
         }
         return Response.ok().build();
-    }
-
-    private static String formatUrls(final Collection<String> urls) {
-        final StringBuilder sb = new StringBuilder();
-        for(final String url : urls) {
-            sb.append(url);
-            sb.append("\n");
-        }
-        return sb.toString().trim();
     }
 
     private static boolean isTwitterHandle(final String something) {
