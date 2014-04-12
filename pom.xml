@@ -44,6 +44,11 @@
             <artifactId>rome-fetcher</artifactId>
             <version>${rome.version}</version>
         </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.4.2</version>
+        </dependency>
         <!-- Test dep's -->
         <dependency>
             <groupId>io.dropwizard</groupId>

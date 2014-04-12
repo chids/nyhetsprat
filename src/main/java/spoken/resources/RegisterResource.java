@@ -12,9 +12,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MultivaluedMap;
 
+import spoken.JedisUtil;
+
 @Path("register")
 @Produces(TEXT_HTML)
 public class RegisterResource {
+
+    public RegisterResource(final JedisUtil redis) {}
 
     @POST
     public DoneView register(final MultivaluedMap<String, String> form) {
