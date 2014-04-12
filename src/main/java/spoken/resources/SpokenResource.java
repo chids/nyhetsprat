@@ -32,7 +32,8 @@ public class SpokenResource {
     private final Collection<Source> sources = ImmutableList.of(
             new Source("Svenska Dagbladet", "http://www.svd.se/?service=rss"),
             new Source("Dagens Nyheter", "http://www.dn.se/nyheter/m/rss/"),
-            new Source("Expressen", "http://www.expressen.se/Pages/OutboundFeedsPage.aspx?id=3642159&viewstyle=rss")
+            new Source("Expressen", "http://www.expressen.se/Pages/OutboundFeedsPage.aspx?id=3642159&viewstyle=rss"),
+            new Source("Aftonbladet", "http://www.aftonbladet.se/nyheter/rss.xml")
             );
     private final AccountDatabase accounts;
     private final ReadHistory history;
