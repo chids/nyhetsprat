@@ -16,6 +16,8 @@ import spoken.resources.ReadHistory;
 import spoken.resources.RegisterResource;
 import spoken.resources.SpokenResource;
 
+import com.twilio.sdk.TwilioRestClient;
+
 public class SpokenService extends Application<Configuration> {
 
     @Override
@@ -23,8 +25,9 @@ public class SpokenService extends Application<Configuration> {
 
     @Override
     public void run(final Configuration config, final Environment env) throws Exception {
+        final TwilioRestClient twilio = new TwilioRestClient(getenv("TWILIO_SID"), getenv("TWILIO_TOKEN"));
         final JedisUtil redis = redis(env);
-        final AccountDatabase accounts = new AccountDatabase(redis);
+        final AccountDatabase accounts = new AccountDatabase(redis, twilio);
         final ReadHistory history = new ReadHistory(redis);
         env.jersey().register(new SpokenResource(accounts, history));
         env.jersey().register(new RegisterResource(accounts));
