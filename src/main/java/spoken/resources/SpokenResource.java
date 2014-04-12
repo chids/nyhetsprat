@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,12 @@ import spoken.models.Source;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.twilio.sdk.verbs.Gather;
 import com.twilio.sdk.verbs.Hangup;
 import com.twilio.sdk.verbs.Say;
 import com.twilio.sdk.verbs.TwiMLException;
 import com.twilio.sdk.verbs.TwiMLResponse;
+import com.twilio.sdk.verbs.Verb;
 
 @Produces(APPLICATION_XML)
 @Consumes(APPLICATION_XML)
@@ -44,19 +47,31 @@ public class SpokenResource {
     public Response answer(@QueryParam("From") final Optional<String> from) throws TwiMLException {
         final TwiMLResponse twiml = new TwiMLResponse();
         LOG.info("Incoming call from " + from.or("unknown"));
-        if(this.accounts.isRegistred(from).isPresent()) {
-            final Say returning = new Say("Välkommen tillbaka");
-            returning.setLanguage("sv-SE");
-            twiml.append(returning);
-        }
-        else {
-            twiml.append(new Say("LOL, new user"));
-        }
+        twiml.append(greet(from));
         for(final Source source : this.sources) {
             source.say(twiml, from.or("unknown"));
         }
         twiml.append(new Say("kay thanks bye"));
         twiml.append(new Hangup());
         return Response.ok(twiml.toXML()).build();
+    }
+
+    private Verb greet(final Optional<String> from) throws TwiMLException {
+        if(this.accounts.isRegistred(from).isPresent()) {
+            return swedish("Välkommen tillbaka");
+        }
+        final Gather welcome = new Gather();
+        welcome.setNumDigits(1);
+        welcome.setAction(UriBuilder.fromResource(RegisterResource.class).build().toString());
+        welcome.setTimeout(3);
+        welcome.append(swedish("Hej, och välkommen till SpokenNews"));
+        welcome.append(swedish("Tryck en siffra för att registrera dig eller dröj kvar"));
+        return welcome;
+    }
+
+    public static Say swedish(final String message) {
+        final Say say = new Say(message);
+        say.setLanguage("sv-SE");
+        return say;
     }
 }
