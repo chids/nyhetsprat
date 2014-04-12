@@ -20,7 +20,7 @@ import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 
 public class AccountDatabase {
-    private static final String TWILIO_NUMBER = getenv("TWILIO_NUMBER");
+    private static final String TWILIO_NUMBER = getenv("TWILIO_SMS_NUMBER");
     private final JedisUtil redis;
     private final TwilioRestClient twilio;
 
