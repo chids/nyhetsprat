@@ -1,5 +1,7 @@
 package spoken.resources;
 
+import java.util.Collection;
+
 import spoken.JedisUtil;
 import spoken.JedisUtil.NonTx;
 
@@ -20,6 +22,13 @@ public class ReadHistory {
     public void markAsRead(final String uri, final String number) {
         try(NonTx nonTx = this.redis.nonTx()) {
             nonTx.redis().sadd(number, uri);
+            nonTx.redis().sadd("recent-" + number, uri);
+        }
+    }
+
+    public Collection<String> recentUrls(final String number) {
+        try(NonTx nonTx = this.redis.nonTx()) {
+            return nonTx.redis().smembers("recent-" + number);
         }
     }
 }
