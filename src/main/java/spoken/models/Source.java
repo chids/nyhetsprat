@@ -79,14 +79,4 @@ public class Source implements Runnable {
 
     }
 
-    public static void main(final String[] args) throws InterruptedException, TwiMLException {
-        final Source source = new Source("SvD", "http://www.svd.se/?service=rss");
-        for(int i = 0; i < 10; i++) {
-            final TwiMLResponse twiml = new TwiMLResponse();
-            source.say(twiml);
-            System.out.println(twiml.toXML());
-            Thread.sleep(1000);
-        }
-    }
-
 }
