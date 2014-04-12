@@ -12,12 +12,10 @@ import com.twilio.sdk.verbs.TwiMLResponse;
 public class Article {
 
     private final String title;
-    private final String description;
     private final String uri;
 
     public Article(final SyndEntry entry) {
         this.title = clean(entry.getTitle());
-        this.description = clean(entry.getDescription().getValue());
         this.uri = clean(entry.getUri());
     }
 
