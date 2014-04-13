@@ -52,10 +52,7 @@ public class CallbackResource {
                 }
             }
             if(isEmail(user.get())) {
-                this.email.send(user.get(),
-                        "Hej!\n\nDu lyssnade nyligen på:\n\n"
-                                + Joiner.on('\n').join(recentUrls)
-                                + "\n\n Mvh,\nhttp://nyhetspr.at | @nyhetsprat | 040-668 80 44");
+                this.email.send(user.get(), recentUrls);
             }
         }
         return Response.ok().build();

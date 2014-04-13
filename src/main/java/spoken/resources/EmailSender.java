@@ -1,6 +1,9 @@
 package spoken.resources;
 
+import java.util.Collection;
+
 import com.github.sendgrid.SendGrid;
+import com.google.common.base.Joiner;
 
 public class EmailSender {
 
@@ -12,7 +15,13 @@ public class EmailSender {
         this.passwd = passwd;
     }
 
-    public void send(final String to, final String body) {
+    public void send(final String to, final Collection<String> recentUrls) {
+        send(to, "Hej!\n\nDu lyssnade nyligen på:\n\n"
+                + Joiner.on('\n').join(recentUrls)
+                + "\n\n Mvh,\nhttp://nyhetspr.at | @nyhetsprat | 040-668 80 44");
+    }
+
+    private void send(final String to, final String body) {
         final SendGrid sendGrid = new SendGrid(this.user, this.passwd);
         sendGrid.addTo(to);
         sendGrid.setText(body);
