@@ -55,7 +55,7 @@ public class CallbackResource {
                 this.email.send(user.get(),
                         "Hej!\n\nDu lyssnade nyligen på:\n\n"
                                 + Joiner.on('\n').join(recentUrls)
-                                + "\n\n Mvh, nyhetspr.at");
+                                + "\n\n Mvh,\nhttp://nyhetspr.at | @nyhetsprat | 040-668 80 44");
             }
         }
         return Response.ok().build();
