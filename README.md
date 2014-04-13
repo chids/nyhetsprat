@@ -1,4 +1,4 @@
-Spoken also known as nyhetspr.at
+Spoken
 ======
 
 This project was born at a 24 hour news hackathon in the Stockholm archipelago.
