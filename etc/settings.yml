@@ -5,8 +5,7 @@ server:
 logging:
   level: INFO
   loggers:
-    plan3: DEBUG
-    io.orchestrate: WARN
+    spoken: DEBUG
     org.eclipse.jetty: WARN
   console:
     logFormat: "%-5level thread=%thread %logger: %m%n%xEx"
