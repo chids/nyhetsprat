@@ -1,10 +1,9 @@
 Spoken
 ======
 
-This project was born at a 24 hour news hackathon in the Stockholm archipelago.
+This is a hack developed at the 24 hour news hackathon [Hackaway](http://www.hackaway.com) in the Stockholm archipelago. 
 
-* [Nyhetspr.at](http://nyhetspr.at)
-* [Hackaway](http://www.hackaway.com)
+Check it out at [Nyhetspr.at](http://nyhetspr.at).
 
 ### Running it
 
