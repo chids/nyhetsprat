@@ -65,6 +65,7 @@ public class Source implements Runnable {
                 for(final SyndEntry entry : entries) {
                     try {
                         this.articles.add(new Article(entry));
+                        LOG.debug("Refreshed source: " + this.name);
                     }
                     catch(final NullPointerException npe) {}
                 }
