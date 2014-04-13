@@ -32,3 +32,5 @@ The following environment variables needs to be setup
 * `TWITTER_SECRET`
 * `TWITTER_ACCESS_TOKEN`
 * `TWITTER_ACCESS_SECRET`
+* `SENDGRID_USERNAME`
+* `SENDGRID_PASSWORD`
