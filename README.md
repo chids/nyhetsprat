@@ -1,8 +1,10 @@
-spoken
+Spoken also known as nyhetspr.at
 ======
 
-Hack hack hack hackaway repo
+This project was born at a 24 hour news hackathon in the Stockholm archipelago.
 
+* [Nyhetspr.at](http://nyhetspr.at)
+* [Hackaway](http://www.hackaway.com)
 
 ### Running it
 
