@@ -5,6 +5,10 @@ This is a hack developed at the 24 hour news hackathon [Hackaway](http://www.hac
 
 Check it out at [Nyhetspr.at](http://nyhetspr.at).
 
+Periodically consumes the RSS feeds for the major Swedish news sites Svenska Dagbladet, Dagens Nyheter, Aftonbladet and Expressen. Reads you the latest headline from each when you call the service. Marks headlines as "heard" so you won't be bothered with the same news over and over. Will send you a welcome SMS the first time you call the service to which you can, optionally, reply with your email address or Twitter handle in which case we'll send you the links to the full articles whose headlines you've listened to.
+
+----
+
 ### Running it
 
 Built to be run locally with [foreman](https://github.com/ddollar/foreman) and in ze clouds on [Heroku](http://heroku.com/).
